@@ -1,0 +1,5 @@
+*.exe
+
+/objects/*
+
+!objects/.gitkeep

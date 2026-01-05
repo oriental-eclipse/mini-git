@@ -1,0 +1,2 @@
+# This directory stores content-addressed objects at runtime
+# Files here are intentionally ignored by git
