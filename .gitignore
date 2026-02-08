@@ -3,3 +3,7 @@
 /objects/*
 
 !objects/.gitkeep
+
+/data/*
+
+!data/.gitkeep
