@@ -10,81 +10,72 @@ uint64_t hashingLogic(const std::string &originalString){
     return hash;
 }
 
-uint64_t fileHasher(std::string fileName){
+Blob fileHasher(const std::string &fileName){
     std::ifstream fin;
-    std::string line, content = "";
-    uint64_t hashedBlob = 0;
+    std::string fileContent;
+    Blob blob;
 
-    fin.open("../data/" + fileName + ".txt");
+    fin.open("../data/" + fileName + ".txt", std::ios::binary);
 
-    while(std::getline(fin, line)){
-        content.append(line);
-    }
-
-    std::string blobHeader = "blob" + std::to_string(content.size()) + "\0";
-    std::string blob = blobHeader + content;
-
-    fin.close();
-
-    hashedBlob = hashingLogic(blob);
-
-    return hashedBlob;
-}
-
-void fileCopy(uint64_t hashedBlob, std::string fileName){
-    std::ifstream fin;
-    std::ofstream fout;
-
-    fin.open("../data/" + fileName + ".txt");
-    
     if(!fin.is_open()){
         std::cerr << "\nFatal Error : File doesn't exist/Could not be opened!";
         exit(1);
     }
-    else{
-        std::cout << "\nInput File Opened Successfully";
-    }
 
-    std::string hashedBlobFileName = std::to_string(hashedBlob);
-    std::string directory = "";
-    directory.append(hashedBlobFileName.substr(0,2));
-    hashedBlobFileName.erase(0, 2);
-    
-    std::string objPath("../objects/" + directory);
+    std::ostringstream ss;
+    ss << fin.rdbuf();
+    fileContent = ss.str();
 
-    if(std::filesystem::exists(objPath) && std::filesystem::is_directory(objPath)){
-        if(std::filesystem::exists(objPath.append("/" + hashedBlobFileName + ".txt"))){
-            std::cout << "\nNo Changes Recorded!";
-            fin.close();
-            return;
-        }
-        else{
-            objPath.append("/" + hashedBlobFileName + ".txt");
-            std::ofstream newFile(objPath);
-            fout.open(objPath);
-            std::cout << "\nNew object created!";
-        }
-    }
-    else{
-        std::filesystem::create_directory(objPath);
-        objPath.append("/" + hashedBlobFileName + ".txt");
-        std::ofstream newFile(objPath);
-        fout.open(objPath);
-        std::cout << "\nNew directory and object created!";
-    }
-
-    std::string line;
-    while(std::getline(fin, line)){
-        fout << line << '\n'; 
-    }
-
-    if(fin.bad() || fout.bad()){
-        std::cerr << "\nFatal Error : Unrecoverable I/O error occured during reading/writing file!";
-        std::filesystem::remove(objPath);
-    }
-
-    std::cout << "\nChanges Recorded Succesfully!";
+    std::string blobHeader = "blob " + std::to_string(fileContent.size());
+    blobHeader.push_back('\0');
+    blob.content = blobHeader + fileContent;
+    std::stringstream hexer;
+    hexer << std::hex << std::setw(16) << std::setfill('0') << hashingLogic(blob.content);;
+    blob.hash = hexer.str();
 
     fin.close();
+
+    return blob;
+}
+
+objectPath filePathCreation(const Blob &hashedBlob){
+    std::string hashedBlobFileName = hashedBlob.hash;
+    std::string directory = hashedBlobFileName.substr(0, 2);
+    std::string fileNamePart = hashedBlobFileName.substr(2);
+
+    objectPath objPath;
+    objPath.dirPath = "../objects/" + directory;
+    objPath.filePath = objPath.dirPath + "/" + fileNamePart + ".txt";
+
+    return objPath;
+}
+
+void fileCopy(const objectPath &objPath, const std::string &content){
+    std::ofstream fout;
+
+    std::filesystem::create_directories(objPath.dirPath);
+
+    if(std::filesystem::exists(objPath.filePath)){
+        std::cout << "\nNo Changes Recorded!";
+        return;
+    }
+
+    fout.open(objPath.filePath, std::ios::binary);
+    
+    if(!fout){
+        std::cerr << "\nFatal Error: Could not create object file!";
+        return;
+    }
+
+    fout.write(content.data(), content.size());
+
+    if(fout.bad()){
+        std::cerr << "\nFatal Error : Unrecoverable I/O error occured during reading/writing file!";
+        std::filesystem::remove(objPath.filePath);
+        return;
+    }
+
+    std::cout << "\nObject Stored Succesfully!";
+
     fout.close();
 }

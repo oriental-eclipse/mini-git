@@ -6,9 +6,10 @@ int main(){
     std::cout << "\nEnter filename : ";
     std::getline(std::cin, fileName);
 
-    uint64_t blob = fileHasher(fileName);
+    Blob blob = fileHasher(fileName);
 
-    fileCopy(blob, fileName);
+    
+    fileCopy(filePathCreation(blob), blob.content);
 
     return 0;
 }
