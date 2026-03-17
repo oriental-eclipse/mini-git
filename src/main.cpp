@@ -1,5 +1,7 @@
 #include <iostream>
 #include "../include/hasher.hpp"
+#include "../include/object.hpp"
+#include "../include/index.hpp"
 
 int main(){
     std::string fileName;

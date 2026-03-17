@@ -13,15 +13,7 @@ struct Blob{
     std::string content;
 };
 
-struct objectPath{
-    std::string dirPath;
-    std::string filePath;
-};
-
 uint64_t hashingLogic(const std::string &originalString);
 Blob fileHasher(const std::string &fileName);
-void fileCopy(const objectPath &objPath, const std::string &content);
-objectPath filePathCreation(const Blob &blob);
-
 
 #endif
