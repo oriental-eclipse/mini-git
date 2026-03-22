@@ -28,7 +28,7 @@ void writeIndex(const Index &index){
     }
 }
 
-void stageIndex(std::string fileName, std::string hash){
+void stageFile(const std::string &fileName, const std::string &hash){
     std::filesystem::create_directories("../index");
 
     Index index = readIndex();
