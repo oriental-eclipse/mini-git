@@ -9,9 +9,10 @@ int main(){
     std::getline(std::cin, fileName);
 
     Blob blob = fileHasher(fileName);
-
     
     fileCopy(filePathCreation(blob), blob.content);
+
+    stageFile(fileName, blob.hash);
 
     return 0;
 }
