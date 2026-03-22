@@ -1,14 +1,9 @@
 #include "../include/index.hpp"
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <unordered_map>
-
 static std::string INDEX_PATH = "../index/stage.txt";
 
-std::unordered_map<std::string, std::string> readIndex(){
-    std::unordered_map<std::string, std::string> index;
+Index readIndex(){
+    Index index;
 
     std::ifstream fin(INDEX_PATH);
 
@@ -25,3 +20,22 @@ std::unordered_map<std::string, std::string> readIndex(){
     return index;
 }
 
+void writeIndex(const Index &index){
+    std::ofstream fout(INDEX_PATH);
+
+    for(const auto &[file, hash] : index){
+        fout << file << " " << hash << '\n';
+    }
+}
+
+void stageIndex(std::string fileName, std::string hash){
+    std::filesystem::create_directories("../index");
+
+    Index index = readIndex();
+
+    index[fileName] = hash;
+
+    writeIndex(index);
+
+    std::cout << "Staged " << fileName;
+}
