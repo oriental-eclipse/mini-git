@@ -7,37 +7,50 @@ objectPath filePathCreation(const Blob &hashedBlob){
 
     objectPath objPath;
     objPath.dirPath = "../objects/" + directory;
-    objPath.filePath = objPath.dirPath + "/" + fileNamePart + ".txt";
+    objPath.filePath = objPath.dirPath + "/" + fileNamePart;
 
     return objPath;
 }
 
-void fileCopy(const objectPath &objPath, const std::string &content){
-    std::ofstream fout;
+void createDirectory(const char *path){
+    mkdir(path, 0755);
+}
 
-    std::filesystem::create_directories(objPath.dirPath);
+bool fileExists(const char *path){
+    return access(path, F_OK) == 0;
+}
 
-    if(std::filesystem::exists(objPath.filePath)){
-        std::cout << "\nNo Changes Recorded!";
+void fileCopy(const objectPath &objPath, const char *content, size_t size){
+    createDirectory(objPath.dirPath.c_str());
+
+    if(fileExists(objPath.filePath.c_str())){
+        std::cout << "No changes recorded!";
         return;
     }
 
-    fout.open(objPath.filePath, std::ios::binary);
-    
-    if(!fout){
-        std::cerr << "\nFatal Error: Could not create object file!";
+    int fDesc = open(objPath.filePath.c_str(), O_WRONLY | O_CREAT, 0644);
+
+    if(fDesc < 0){
+        perror("Fatal Error : Could not create file!");
         return;
     }
 
-    fout.write(content.data(), content.size());
+    size_t writtenBytes = 0;
 
-    if(fout.bad()){
-        std::cerr << "\nFatal Error : Unrecoverable I/O error occured during reading/writing file!";
-        std::filesystem::remove(objPath.filePath);
-        return;
+    while(writtenBytes < size){
+        ssize_t written = write(fDesc, content + writtenBytes, size - writtenBytes);
+
+        if(written < 0){
+            perror("Fatal Error : Write Failed!");
+            close(fDesc);
+            unlink(objPath.filePath.c_str());
+            return;
+        }
+
+        writtenBytes += written;
     }
 
     std::cout << "\nObject Stored Succesfully!";
 
-    fout.close();
+    close(fDesc);
 }

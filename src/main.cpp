@@ -10,7 +10,7 @@ int main(){
 
     Blob blob = fileHasher(fileName);
     
-    fileCopy(filePathCreation(blob), blob.content);
+    fileCopy(filePathCreation(blob), blob.content.c_str(), blob.content.size());
 
     stageFile(fileName, blob.hash);
 
