@@ -37,5 +37,5 @@ void stageFile(const std::string &fileName, const std::string &hash){
 
     writeIndex(index);
 
-    std::cout << "Staged " << fileName;
+    std::cout << "Staged " << fileName << '\n';
 }

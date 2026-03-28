@@ -15,10 +15,10 @@ Blob fileHasher(const std::string &fileName){
     std::string fileContent;
     Blob blob;
 
-    fin.open("../data/" + fileName + ".txt", std::ios::binary);
+    fin.open("../data/" + fileName, std::ios::binary);
 
     if(!fin.is_open()){
-        std::cerr << "\nFatal Error : File doesn't exist/Could not be opened!";
+        std::cerr << "Fatal Error : File doesn't exist / Could not be opened!\n";
         exit(1);
     }
 

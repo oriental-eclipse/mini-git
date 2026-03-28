@@ -24,14 +24,14 @@ void fileCopy(const objectPath &objPath, const char *content, size_t size){
     createDirectory(objPath.dirPath.c_str());
 
     if(fileExists(objPath.filePath.c_str())){
-        std::cout << "No changes recorded!";
+        std::cout << "No changes recorded!\n";
         return;
     }
 
     int fDesc = open(objPath.filePath.c_str(), O_WRONLY | O_CREAT, 0644);
 
     if(fDesc < 0){
-        perror("Fatal Error : Could not create file!");
+        perror("Fatal Error : Could not create file!\n");
         return;
     }
 
@@ -41,7 +41,7 @@ void fileCopy(const objectPath &objPath, const char *content, size_t size){
         ssize_t written = write(fDesc, content + writtenBytes, size - writtenBytes);
 
         if(written < 0){
-            perror("Fatal Error : Write Failed!");
+            perror("Fatal Error : Write Failed!\n");
             close(fDesc);
             unlink(objPath.filePath.c_str());
             return;
@@ -50,7 +50,7 @@ void fileCopy(const objectPath &objPath, const char *content, size_t size){
         writtenBytes += written;
     }
 
-    std::cout << "\nObject Stored Succesfully!";
+    std::cout << "Object Stored Succesfully!\n";
 
     close(fDesc);
 }
