@@ -13,7 +13,7 @@ Index readIndex(){
 
     std::string file, hash;
 
-    if(fin >> file >> hash){
+    while(fin >> file >> hash){
         index[file] = hash;
     }
 
