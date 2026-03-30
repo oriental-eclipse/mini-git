@@ -4,9 +4,12 @@
 #include <string>
 #include <cstdint>
 #include <fstream>
-#include <filesystem>
 #include <iostream>
-#include <sstream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+
+#define BUFFER_SIZE 4096
 
 struct Blob{
     std::string hash;
