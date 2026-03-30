@@ -3,10 +3,19 @@
 #include "../include/object.hpp"
 #include "../include/index.hpp"
 
-int main(){
-    std::string fileName;
-    std::cout << "\nEnter filename : ";
-    std::getline(std::cin, fileName);
+int main(int argc, char* argv[]){
+    if(argc < 3){
+        std::cerr << "Expecting: ./ksks add <filename>\n";
+        return 1;
+    }
+
+    const char* command = argv[1];
+    std::string fileName(argv[2]);
+
+    if(strcmp(command, "add") != 0){
+        std::cerr << "Unknown command : " << command << '\n';
+        return 1;
+    }
 
     Blob blob = fileHasher(fileName);
     
