@@ -36,12 +36,14 @@ Blob fileHasher(const std::string &fileName){
         exit(1);
     }
 
+    close(fDesc);
+
     std::string blobHeader = "blob " + std::to_string(fileContent.size());
     blobHeader.push_back('\0');
     blob.content = blobHeader + fileContent;
 
     char hashBuffer[32];
-    sprintf(hashBuffer, "%016lx", hashingLogic(blob.content));
+    snprintf(hashBuffer, sizeof(hashBuffer), "%016lx", hashingLogic(blob.content));
     blob.hash = hashBuffer;
 
     return blob;
