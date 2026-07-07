@@ -12,8 +12,30 @@ objectPath filePathCreation(const Blob &hashedBlob){
     return objPath;
 }
 
-void createDirectory(const char *path){
-    mkdir(path, 0755);
+bool createDirectory(const char *path){
+    char tempPath[strlen(path) + 1];
+    strcpy(tempPath, path);
+    size_t len = strlen(tempPath);
+
+    for(size_t i = 0; i < len; i++){
+        if(tempPath[i] == '/'){
+            tempPath[i] = '\0';
+
+            if(mkdir(tempPath, 0755) == -1 && errno != EEXIST){
+                perror("Directory Creation Error");
+                return false;
+            }
+
+            tempPath[i] = '/';
+        }
+    }
+    
+    if(mkdir(path, 0755) == -1 && errno != EEXIST){
+        perror("Directory Creation Error");
+        return false;
+    }
+
+    return true;
 }
 
 bool fileExists(const char *path){
@@ -21,7 +43,9 @@ bool fileExists(const char *path){
 }
 
 void fileCopy(const objectPath &objPath, const char *content, size_t size){
-    createDirectory(objPath.dirPath.c_str());
+    if(!createDirectory(objPath.dirPath.c_str())){
+        return;
+    }
 
     if(fileExists(objPath.filePath.c_str())){
         std::cout << "No changes recorded!\n";

@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstring>
+#include <errno.h>
 
 struct objectPath{
     std::string dirPath;
@@ -15,7 +16,7 @@ struct objectPath{
 
 void fileCopy(const objectPath &objPath, const char *content, size_t size);
 objectPath filePathCreation(const Blob &blob);
-void createDirectory(const char *path);
+bool createDirectory(const char *path);
 bool fileExists(const char *path);
 
 #endif 
