@@ -44,7 +44,7 @@ int addCommand(const int argc, char* argv[]){
         return -1;
     }
     if(argc > 3){
-        std::cerr << "Error: Too many arguments!";
+        std::cerr << "Error: Too many arguments!\n";
         return -1;
     }
 
@@ -61,16 +61,16 @@ int addCommand(const int argc, char* argv[]){
 
 int initCommand(const int argc, char* argv[]){
     if (argc != 2){
-        std::cerr << "Error: Too many arguments!";
+        std::cerr << "Error: Too many arguments!\n";
         return -1;
     }
 
     if(access(".ksks", F_OK) == 0){
-        printf("Repository already initialized!");
+        printf("Repository already initialized!\n");
         return 0;
     }
 
-    printf("Repository initializing...");
+    printf("Repository initializing...\n");
 
     bool dirDescMain = createDirectory(".ksks");
     bool dirDescObj = createDirectory(".ksks/objects");
@@ -85,7 +85,7 @@ int initCommand(const int argc, char* argv[]){
     ssize_t bytesWritten = write(fDescConfig, headContent, strlen(headContent));
 
     if(bytesWritten != (ssize_t)strlen(headContent)){
-        perror("Error: HEAD write failure");
+        perror("Error: HEAD write failure\n");
         close(fDescHEAD);
         goto cleanup;
     }
@@ -93,24 +93,24 @@ int initCommand(const int argc, char* argv[]){
     if(fDescConfig == -1 || fDescHEAD == -1 || fDescIndex == -1 || fDescMain == -1 ||
        !dirDescMain || !dirDescObj || !dirDescRefs || !dirDescHeads){
     cleanup:
-        perror("Fatal Error: Couldn't initialize .ksks directory!");
+        perror("Fatal Error: Couldn't initialize .ksks directory!\n");
 
         if(dirDescMain){
             int delDesc = nftw(".ksks", delete_callback, 64, FTW_DEPTH | FTW_PHYS);
 
             if(delDesc == 0){
-                printf("Removed residual .ksks directory");
+                printf("Removed residual .ksks directory\n");
                 return -1;
             }
             else{
-                perror("Error: Failed to remove residual .ksks directory!");
+                perror("Error: Failed to remove residual .ksks directory!\n");
                 return -2;
             }
         }
         return -1;
     }
 
-    printf("Repository initialized!");
+    printf("Repository initialized!\n");
 
     
     close(fDescHEAD);
