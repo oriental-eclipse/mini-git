@@ -10,3 +10,5 @@ ksks
 !data/.gitkeep
 
 /index/*
+
+/.ksks/
