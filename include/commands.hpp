@@ -9,14 +9,14 @@
 
 struct Command{
     const char* name;
-    int (*handler)(const int, const char*[]);
+    int (*handler)(const int, char*[]);
 };
 
 extern Command commands[];
 extern const size_t COMMAND_COUNT;
 
-int dispatcher(const int argc, const char* argv[]);
-int addCommand(const int argc, const char* argv[]);
-int initCommand(const int argc, const char* argv[]);
+int dispatcher(const int argc, char* argv[]);
+int addCommand(const int argc, char* argv[]);
+int initCommand(const int argc, char* argv[]);
 
 #endif

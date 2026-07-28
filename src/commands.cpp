@@ -9,7 +9,7 @@ const size_t COMMAND_COUNT = sizeof(commands) / sizeof(commands[0]);
 
 const char* headContent = "ref: refs/heads/main\n";
 
-int dispatcher(const int argc, const char* argv[]){
+int dispatcher(const int argc, char* argv[]){
     if(argc < 2){
         std::cerr << "Error: Too few arguments!";
         return -1;
@@ -38,7 +38,7 @@ int delete_callback(const char *fpath, const struct stat *sb, int typeflag, stru
     return status;
 }
 
-int addCommand(const int argc, const char* argv[]){
+int addCommand(const int argc, char* argv[]){
     if(argc < 3){
         std::cerr << "Expecting: ./ksks add <filename>\n";
         return -1;
@@ -59,7 +59,7 @@ int addCommand(const int argc, const char* argv[]){
     return 0;
 }
 
-int initCommand(const int argc, const char* argv[]){
+int initCommand(const int argc, char* argv[]){
     if (argc != 2){
         std::cerr << "Error: Too many arguments!";
         return -1;
@@ -109,8 +109,6 @@ int initCommand(const int argc, const char* argv[]){
         }
         return -1;
     }
-
-
 
     printf("Repository initialized!");
 
