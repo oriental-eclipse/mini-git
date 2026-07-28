@@ -13,7 +13,7 @@ uint64_t hashingLogic(const std::string &originalString){
 Blob fileHasher(const std::string &fileName){
     Blob blob;
 
-    std::string fullPath = "../data/" + fileName;
+    std::string fullPath = "data/" + fileName;
 
     int fDesc = open(fullPath.c_str(), O_RDONLY);
     if(fDesc < 0){

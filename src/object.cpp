@@ -6,7 +6,7 @@ objectPath filePathCreation(const Blob &hashedBlob){
     std::string fileNamePart = hashedBlobFileName.substr(2);
 
     objectPath objPath;
-    objPath.dirPath = "../objects/" + directory;
+    objPath.dirPath = ".ksks/objects/" + directory;
     objPath.filePath = objPath.dirPath + "/" + fileNamePart;
 
     return objPath;
